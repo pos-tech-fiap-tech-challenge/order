@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/lanchonete/payments"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "qr-code-example.png",
+    "headers": {
+      "Content-Type": "image/png"
+    }
+  }
+}
