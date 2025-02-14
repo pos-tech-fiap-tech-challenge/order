@@ -3,10 +3,12 @@ package br.com.techchallenge.order_microsservice.order.controller
 import br.com.techchallenge.order_microsservice.order.controller.request.OrderRequest
 import br.com.techchallenge.order_microsservice.order.core.entities.Order
 import br.com.techchallenge.order_microsservice.order.core.entities.OrderProgress
+import br.com.techchallenge.order_microsservice.order.core.entities.PaymentProgress
 import br.com.techchallenge.order_microsservice.order.core.usecase.GetOrderService
 import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.CreateOrderUseCase
 import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.ListOrderUseCase
 import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.UpdateOrderProgressUseCase
+import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.UpdatePaymentOrderUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,10 +20,11 @@ class OrderController(
     private val serviceCreateOrderUseCase: CreateOrderUseCase,
     private val serviceGetOrderProgressUseCase: GetOrderService,
     private val orderUseCase: ListOrderUseCase,
-    private val serviceUpdateOrderProgressUseCase: UpdateOrderProgressUseCase
+    private val serviceUpdateOrderProgressUseCase: UpdateOrderProgressUseCase,
+    private val serviceUpdatePayment: UpdatePaymentOrderUseCase
 ) : OrderProgressApi {
 
-    @GetMapping
+    @GetMapping("/progress/")
     override fun listOrderByProgressAndCustomer(
         @RequestParam(required = false) progress: OrderProgress,
         @RequestParam(required = false) cpf: String
@@ -35,22 +38,35 @@ class OrderController(
         return ResponseEntity.ok(serviceCreateOrderUseCase.requestOrder(orderRequest))
     }
 
-    @PutMapping("/{orderSnackId}")
-    override fun updateOrderSnackProgress(
+    @PutMapping("/{orderId}")
+    override fun updateOrderProgress(
         @RequestBody orderProgress: OrderProgress,
-        @PathVariable("orderSnackId") orderSnackId: UUID
+        @PathVariable("orderId") orderId: UUID
     ): ResponseEntity<Void> {
-        serviceUpdateOrderProgressUseCase.updateProgress(orderProgress, orderSnackId)
+        serviceUpdateOrderProgressUseCase.updateProgress(orderProgress, orderId)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping("/{orderSnackId}")
-    override fun getOrderSnackProgress(@PathVariable("orderSnackId") orderSnackId: UUID): ResponseEntity<OrderProgress> {
-        val result: OrderProgress = serviceGetOrderProgressUseCase.getOrderProgress(orderSnackId)
+    @GetMapping("/{orderId}")
+    override fun getOrderProgress(@PathVariable("orderId") orderId: UUID): ResponseEntity<OrderProgress> {
+        val result: OrderProgress = serviceGetOrderProgressUseCase.getOrderProgress(orderId)
         return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/payments/{orderId}")
+    override fun updateOrderPayment(@PathVariable("orderId") orderId: UUID, @RequestBody paymentProgress: PaymentProgress ):  ResponseEntity<String>{
+        serviceUpdatePayment.updatePayment(orderId, paymentProgress)
+        return ResponseEntity("Status do pagamento atualizado com sucesso para $paymentProgress", HttpStatus.OK )
     }
 
     companion object {
         const val BASE_URL = "/lanchonete/orders"
+    }
+
+    @GetMapping
+    override fun getUnfinishedOrders(): List<Order>{
+        return orderUseCase.listOrderByProgress(
+            listOf(OrderProgress.READY,OrderProgress.IN_PREPARATION,OrderProgress.RECEIVED)
+        )
     }
 }

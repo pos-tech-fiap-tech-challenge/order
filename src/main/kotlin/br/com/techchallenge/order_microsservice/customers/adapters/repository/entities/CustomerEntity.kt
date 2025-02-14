@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document("customerDocument")
 data class CustomerEntity(
-    val customerId: String,
+    val id: String,
     val name: String,
     val emailAddress: String,
     val cpf: String

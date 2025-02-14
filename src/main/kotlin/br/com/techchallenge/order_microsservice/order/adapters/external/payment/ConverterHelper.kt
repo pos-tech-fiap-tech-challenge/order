@@ -3,7 +3,6 @@ package br.com.techchallenge.order_microsservice.order.adapters.external.payment
 import br.com.techchallenge.order_microsservice.order.adapters.external.payment.DTO.PaymentItem
 import br.com.techchallenge.order_microsservice.order.adapters.external.payment.DTO.PaymentOrderRequest
 import br.com.techchallenge.order_microsservice.order.adapters.external.payment.DTO.PaymentProduct
-import br.com.techchallenge.order_microsservice.order.adapters.external.payment.DTO.PaymentResponse
 import br.com.techchallenge.order_microsservice.order.core.entities.Order
 import br.com.techchallenge.order_microsservice.order.core.entities.Payment
 import br.com.techchallenge.order_microsservice.order.core.entities.PaymentProgress
@@ -30,8 +29,3 @@ fun Order.OrderItem.toPaymentProduct() =
         name = productName,
         price = amountPerItem
     )
-
-fun PaymentResponse.toPayment() =
-    with(this) {
-        Payment( qrCodeData,PaymentProgress.OPPENED)
-    }

@@ -5,4 +5,5 @@ import br.com.techchallenge.order_microsservice.order.core.entities.OrderProgres
 
 interface ListOrderUseCase {
     fun listOrderByProgressAndCustomer(progress: OrderProgress, cpf: String): List<Order>
+    fun listOrderByProgress(progressStatus: List<OrderProgress>):List<Order>
 }

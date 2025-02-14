@@ -12,7 +12,7 @@ class CustomerAdapter(
 ): CustomerRepositoryPort
  {
     override fun getCustomerById(customerId: String): Customer? {
-        return customerRepository.findByCustomerId(customerId)?.toDomain()
+        return customerRepository.findById(customerId).getOrNull()?.toDomain()
     }
     override fun getCustomerByCpf(cpf: String): Customer? {
         return customerRepository.findByCpf(cpf)?.toDomain()

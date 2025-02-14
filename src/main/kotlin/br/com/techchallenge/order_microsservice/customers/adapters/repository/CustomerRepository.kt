@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CustomerRepository : MongoRepository<CustomerEntity, String>{
     fun findByCpf(cpf:String): CustomerEntity?
-    fun findByCustomerId(customerId: String):CustomerEntity?
-    fun existsByCpf(cpf:String): Boolean
 }
