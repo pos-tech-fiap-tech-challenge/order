@@ -17,34 +17,27 @@ spec:
         app: order
     spec:
       serviceAccountName: order-service-account
+      volumes:
+        - name: documentdb-cert-volume
+          secret:
+            secretName: documentdb-cert
+            optional: false
+        - name: certs-dir
+          emptyDir: {}
       containers:
-        - name: app
+        - name: order
           image: <ECR_REPOSITORY_URL>:latest
-          env:
-            - name: environment
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: environment
-            - name: SPRING_DATASOURCE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: SPRING_DATASOURCE_URL
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: SPRING_DATASOURCE_USERNAME
-            - name: SPRING_LIQUIBASE_ENABLED
-              value: "true"
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SPRING_DATASOURCE_PASSWORD
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: mongo-config
+          volumeMounts:
+            - name: documentdb-cert-volume
+              mountPath: "/tmp/certs"
+              readOnly: true
+            - name: certs-dir
+              mountPath: "/certs"
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -57,6 +50,17 @@ spec:
               port: 8080
             initialDelaySeconds: 120
             periodSeconds: 10
+          env:
+            - name: ORDER_INTEGRATION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: ORDER_URL
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_URI
           resources:
             limits:
               memory: "512Mi"
@@ -64,3 +68,10 @@ spec:
             requests:
               memory: "256Mi"
               cpu: "300m"
+          command: ["/bin/sh", "-c"]
+          args:
+            - "exec java $JAVA_OPTS -Djavax.net.debug=ssl -jar *.jar"
+
+
+
+
