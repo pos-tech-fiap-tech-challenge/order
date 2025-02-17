@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 RUN ls -l /order-app/target
 
 # Fase de runtime: execução da aplicação
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:23.0.2_7-jdk-alpine-3.21
 
 WORKDIR /order-app
 
