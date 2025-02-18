@@ -10,6 +10,7 @@ import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.Li
 import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.UpdateOrderProgressUseCase
 import br.com.techchallenge.order_microsservice.order.core.usecase.interfaces.UpdatePaymentOrderUseCase
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -35,7 +36,7 @@ class OrderController(
 
     @PostMapping
     fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<ByteArray> {
-        return ResponseEntity.ok(serviceCreateOrderUseCase.requestOrder(orderRequest))
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(serviceCreateOrderUseCase.requestOrder(orderRequest))
     }
 
     @PutMapping("/{orderId}")

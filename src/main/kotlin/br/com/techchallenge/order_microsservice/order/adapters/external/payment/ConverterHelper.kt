@@ -10,6 +10,7 @@ import br.com.techchallenge.order_microsservice.order.core.entities.PaymentProgr
 fun Order.toPaymentOrderRequest(): PaymentOrderRequest =
     with(this){
         PaymentOrderRequest(
+            orderId = orderId.toString(),
             totalPrice = amount,
             items = items.map{it -> it.toPaymentItem()}
         )
