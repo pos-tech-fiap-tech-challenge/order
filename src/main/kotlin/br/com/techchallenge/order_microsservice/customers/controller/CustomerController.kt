@@ -28,6 +28,6 @@ class CustomerController(
     @GetMapping
     fun getCustomerByCpf(cpf: String): ResponseEntity<Customer> {
         val result: Customer = getCustomerService.getCustomerByCpf(cpf)
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(result);
     }
 }

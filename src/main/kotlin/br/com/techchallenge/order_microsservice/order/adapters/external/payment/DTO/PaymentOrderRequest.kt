@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 const val DEFAULT_PAYMENT_METHOD = "MERCADO_PAGO"
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class PaymentOrderRequest(
+    val orderId: String,
     val paymentGateway:String = DEFAULT_PAYMENT_METHOD,
     val items : List<PaymentItem>,
     val totalPrice: Double
