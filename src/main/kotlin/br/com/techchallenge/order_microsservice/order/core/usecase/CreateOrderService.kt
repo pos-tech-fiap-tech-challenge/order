@@ -30,7 +30,6 @@ class CreateOrderService(
         order.setPayment(payment)
         orderPort.saveOrder(order)
         return payment.paymentQrCodeData!!
-
     }
 
     private fun generateOrderItem(productId: String, qtd: Int): Order.OrderItem {
