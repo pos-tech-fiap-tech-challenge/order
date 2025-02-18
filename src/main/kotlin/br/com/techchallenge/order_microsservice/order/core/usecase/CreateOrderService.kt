@@ -4,7 +4,7 @@ import br.com.techchallenge.order_microsservice.customers.core.entities.Customer
 import br.com.techchallenge.order_microsservice.customers.core.usecase.interfaces.GetCustomerIdUseCase
 import br.com.techchallenge.order_microsservice.order.adapters.external.payment.PaymentPort
 import br.com.techchallenge.order_microsservice.order.adapters.external.product.ProductPort
-import br.com.techchallenge.order_microsservice.order.adapters.repository.order.OrderRepositoryPort
+import br.com.techchallenge.order_microsservice.order.adapters.repository.OrderRepositoryPort
 import br.com.techchallenge.order_microsservice.order.controller.request.OrderRequest
 import br.com.techchallenge.order_microsservice.order.core.entities.Order
 import br.com.techchallenge.order_microsservice.order.core.entities.Payment
@@ -28,14 +28,9 @@ class CreateOrderService(
         val order = Order(customer=customer, items=listOfOrderItems)
         val payment: Payment = paymentIntegrationAdapter.createPayment(order)
         order.setPayment(payment)
-        try {
-            orderPort.saveOrder(order)
-            return payment.paymentQrCodeData!!
-        } catch (e: WriterException) {
-            throw RuntimeException(e)
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
+        orderPort.saveOrder(order)
+        return payment.paymentQrCodeData!!
+
     }
 
     private fun generateOrderItem(productId: String, qtd: Int): Order.OrderItem {

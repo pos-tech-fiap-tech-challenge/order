@@ -1,5 +1,5 @@
 # Fase de build: compilação do projeto
-FROM maven:3.8.4-openjdk-17 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 
 WORKDIR /order-app
 
@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 RUN ls -l /order-app/target
 
 # Fase de runtime: execução da aplicação
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:23.0.2_7-jdk-alpine-3.21
 
 WORKDIR /order-app
 

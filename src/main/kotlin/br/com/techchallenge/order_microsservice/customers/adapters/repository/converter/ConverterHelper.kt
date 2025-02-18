@@ -8,7 +8,7 @@ import java.util.*
 fun CustomerEntity.toDomain() =
     with(this){
         Customer(
-            id = UUID.fromString(customerId),
+            id = UUID.fromString(id),
             name = name,
             emailAddress = emailAddress,
             cpf = cpf
@@ -18,7 +18,7 @@ fun CustomerEntity.toDomain() =
 fun Customer.toEntity() =
     with(this){
         CustomerEntity(
-            customerId = id.toString(),
+            id = id.toString(),
             cpf = cpf,
             name = name,
             emailAddress = emailAddress
