@@ -8,19 +8,21 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class CustomerAdapter(
-    val customerRepository : CustomerRepository
-): CustomerRepositoryPort
- {
-    override fun getCustomerById(customerId: String): Customer? {
-        return customerRepository.findById(customerId).getOrNull()?.toDomain()
+    val customerRepository: CustomerRepository
+) : CustomerRepositoryPort {
+
+    override fun saveCustomer(customer: Customer): Customer {
+        val customerEntity = customer.toEntity()
+        return customerRepository.save(customerEntity).toDomain()
     }
+
+
     override fun getCustomerByCpf(cpf: String): Customer? {
         return customerRepository.findByCpf(cpf)?.toDomain()
     }
 
-     override fun saveCustomer(customer: Customer):Customer {
-         val customerEntity =  customer.toEntity()
-         return customerRepository.save(customerEntity).toDomain()
-     }
+    override fun getCustomerById(customerId: String): Customer? {
+        return customerRepository.findById(customerId).getOrNull()?.toDomain()
+    }
 
- }
+}
